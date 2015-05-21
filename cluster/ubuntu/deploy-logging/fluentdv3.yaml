@@ -1,0 +1,37 @@
+apiVersion: v1beta3
+kind: ReplicationController
+metadata:
+  name: fluentd4
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    app: fluentd-logging4
+  template:
+    metadata:
+      name: fluentd4
+      labels:
+        app: fluentd-logging4
+    spec:
+      containers:
+      - image: dw
+        name: fluentd-es
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+          - name: containers
+            mountPath: /var/lib/docker/containers
+          - name: varlog
+            mountPath: /varlog
+      volumes:
+        - name: containers
+          source:
+            hostDir:
+              path: /var/lib/docker/containers
+        - name: varlog
+          source:
+            hostDir:
+              path: /var/log
+      nodeSelector:
+        node_id: m4
