@@ -5,7 +5,7 @@ kubectl get nodes | awk '{
     system("sed -i s/node_id:.*$/node_id:\\ m"NR-1"/g ./fluentdv3.yaml");
     system("sed -i s/fluentd[0-9]+*$/fluentd"NR-1"/g ./fluentdv3.yaml");
     system("sed -i s/fluentd-logging.*$/fluentd-logging"NR-1"/g ./fluentdv3.yaml");
+    system("./pos_file.sh "$1);
     system("kubectl create -f ./fluentdv3.yaml");
   }
 }'
-#system("./ex.sh "$1);

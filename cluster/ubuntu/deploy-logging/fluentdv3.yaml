@@ -14,7 +14,7 @@ spec:
         app: fluentd-logging4
     spec:
       containers:
-      - image: dw
+      - image: gcr.io/google_containers/fluentd-elasticsearch:1.5
         name: fluentd-es
         ports:
         - containerPort: 80
