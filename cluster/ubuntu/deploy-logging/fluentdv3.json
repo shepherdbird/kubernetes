@@ -1,0 +1,70 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1beta3",
+  "metadata": {
+    "name": "fluentd4",
+    "namespace": "default",
+    "labels": {
+      "kubernetes.io/cluster-service": "true",
+      "name": "fluentd-logging"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "name": "fluentd-logging4"
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "kubernetes.io/cluster-service": "true",
+          "name": "fluentd-logging4"
+        }
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "containers",
+            "hostPath": {
+              "path": "/var/lib/docker/containers"
+            },
+          },
+          {
+            "name": "varlog",
+            "hostPath": {
+              "path": "/var/log"
+            },
+          }
+        ],
+        "containers": [
+          {
+            "name": "fluentd-es",
+            "image": "gcr.io/google_containers/fluentd-elasticsearch:1.5",
+            "env": [
+              {
+                "name": "FLUENTD_ARGS",
+                "value": "-qq"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "containers",
+                "mountPath": "/var/lib/docker/containers"
+              },
+              {
+                "name": "varlog",
+                "mountPath": "/varlog"
+              }
+            ],
+          }
+        ],
+	"nodeSelector":{
+          "node_id": "m4"
+	},
+      }
+    }
+  },
+  "status": {
+    "replicas": 1
+  }
+}
